@@ -33,14 +33,12 @@ export const confirmOrderTemplate = (userName, order) => {
     <table align="center" width="100%" cellpadding="0" cellspacing="0"
       style="max-width:600px;margin:40px auto;background:#f4f6f8;border-radius:8px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.05);">
 
-      <!-- Header -->
+     
       <tr>
         <td style="background:#71AC11;padding:30px;text-align:center;color:#ffffff;">
           <h1 style="margin:0;font-size:24px;">Order Confirmed!</h1>
         </td>
       </tr>
-
-      <!-- Body -->
       <tr>
         <td style="padding:40px 30px;color:#333333;">
 
@@ -51,8 +49,6 @@ export const confirmOrderTemplate = (userName, order) => {
           <p style="font-size:15px;line-height:1.6;margin:0 0 20px;">
             Your order has been placed successfully. Please keep cash ready at delivery time.
           </p>
-
-          <!-- Order Info -->
           <div style="background:#ffffff;padding:15px;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:25px;">
             <p style="margin:0 0 8px;font-size:14px;"><b>Order ID:</b> ${order?._id?.toString()?.slice(-6)}</p>
             <p style="margin:0 0 8px;font-size:14px;"><b>Order Date:</b> ${new Date(
@@ -64,8 +60,6 @@ export const confirmOrderTemplate = (userName, order) => {
     }
             </p>
           </div>
-
-          <!-- Items -->
          <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:20px;">
 
   <tr style="background:#e8f5e9;">
@@ -93,7 +87,6 @@ export const confirmOrderTemplate = (userName, order) => {
         </td>
       </tr>
 
-      <!-- Footer -->
       <tr>
         <td style="background:#f4f6f8;padding:20px;text-align:center;font-size:12px;color:#888;">
           © ${new Date().getFullYear()} Grocify. All rights reserved.

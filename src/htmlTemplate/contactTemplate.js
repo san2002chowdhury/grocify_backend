@@ -13,14 +13,14 @@ export const contactTemplate = (name, email, message) => {
     <table align="center" width="100%" cellpadding="0" cellspacing="0"
       style="max-width:600px;margin:40px auto;background:#f4f6f8;border-radius:8px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.05);">
 
-      <!-- Header -->
+    
       <tr>
         <td style="background:#71AC11;padding:30px;text-align:center;color:#ffffff;">
           <h1 style="margin:0;font-size:24px;">📩 Message Received!</h1>
         </td>
       </tr>
 
-      <!-- Body -->
+     
       <tr>
         <td style="padding:40px 30px;color:#333333;">
 
@@ -32,7 +32,7 @@ export const contactTemplate = (name, email, message) => {
             Thank you for contacting <b>Grocify</b>. We have received your message and our support team will get back to you as soon as possible.
           </p>
 
-          <!-- Message Box -->
+         
           <div style="background:#ffffff;padding:15px;border-radius:8px;border:1px solid #e5e7eb;margin-bottom:25px;">
             <p style="margin:0 0 8px;font-size:14px;"><b>Your Email:</b> ${email}</p>
             <p style="margin:0;font-size:14px;"><b>Your Message:</b></p>
@@ -46,7 +46,7 @@ export const contactTemplate = (name, email, message) => {
           </p>
 
           <div style="text-align:center;margin:30px 0;">
-            <a href="http://localhost:5173/" style="
+            <a href="https://grocify-frontend-ttg2.onrender.com" style="
               background:#71AC11;
               color:#ffffff;
               text-decoration:none;
@@ -62,7 +62,6 @@ export const contactTemplate = (name, email, message) => {
         </td>
       </tr>
 
-      <!-- Footer -->
       <tr>
         <td style="background:#f4f6f8;padding:20px;text-align:center;font-size:12px;color:#888;">
           © ${new Date().getFullYear()} Grocify. All rights reserved.

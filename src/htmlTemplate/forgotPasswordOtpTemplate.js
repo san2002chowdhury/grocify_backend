@@ -12,15 +12,11 @@ export const forgotPasswordOtpTemplate = (otp, userName) => {
 
     <table align="center" width="100%" cellpadding="0" cellspacing="0"
       style="max-width:600px;margin:40px auto;background:#f4f6f8;border-radius:8px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.05);">
-
-      <!-- Header -->
       <tr>
         <td style="background:#71AC11;padding:30px;text-align:center;color:#ffffff;">
           <h1 style="margin:0;font-size:24px;">Reset Your Password</h1>
         </td>
       </tr>
-
-      <!-- Body -->
       <tr>
         <td style="padding:40px 30px;color:#333333;">
 
@@ -31,8 +27,6 @@ export const forgotPasswordOtpTemplate = (otp, userName) => {
           <p style="font-size:15px;line-height:1.6;margin:0 0 25px;">
             We received a request to reset your password. Please use the OTP below to continue.
           </p>
-
-          <!-- OTP Box -->
           <div style="text-align:center;margin:30px 0;">
             <div style="
               display:inline-block;
@@ -61,8 +55,6 @@ export const forgotPasswordOtpTemplate = (otp, userName) => {
 
         </td>
       </tr>
-
-      <!-- Footer -->
       <tr>
         <td style="background:#f4f6f8;padding:20px;text-align:center;font-size:12px;color:#888;">
           © ${new Date().getFullYear()} Grocify. All rights reserved.
