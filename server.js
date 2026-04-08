@@ -16,7 +16,17 @@ const PORT = process.env.PORT || 8000;
 dbConnect();
 
 app.use(express.json());
-app.use(cors());
+
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "https://grocify-frontend-ttg2.onrender.com"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+}));
+
 app.use("/uploads", express.static("uploads"));
 app.use("/grocify/user", userRoute);
 app.use("/grocify/category", categoryRoute);
