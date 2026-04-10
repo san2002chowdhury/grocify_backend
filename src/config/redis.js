@@ -1,6 +1,6 @@
 import dotenv from "dotenv/config";
-import { IORedis } from "ioredis";
+import Redis from "ioredis";
 
-export const redisConnection = new IORedis(process.env.REDIS_URL, {
+export const redisConnection = new Redis(process.env.REDIS_URL, {
     maxRetriesPerRequest: null,
 })
