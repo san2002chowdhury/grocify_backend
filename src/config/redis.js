@@ -1,9 +1,7 @@
 import dotenv from "dotenv/config";
-import IORedis from "ioredis";
+import { Redis } from "@upstash/redis";
 
-export const redisConnection = new IORedis(
-    process.env.REDIS_URL,
-    {
-        maxRetriesPerRequest: null
-    }
-)
+export const redisConnection = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+})

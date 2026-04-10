@@ -6,6 +6,7 @@ import { verifyEmailTemplate } from "../htmlTemplate/verifyEmailTemplate.js";
 import { sendEmail } from "../config/sendEmail.js";
 import { forgotPasswordOtpTemplate } from "../htmlTemplate/forgotPasswordOtpTemplate.js";
 import { emailQueue } from "../queue/emailQueue.js";
+import { redisConnection } from "../config/redis.js";
 
 
 export const register = async (req, res) => {
@@ -125,10 +126,9 @@ export const forgotPassword = async (req, res) => {
                 message: "User not found!"
             })
         }
-        user.otp = Math.floor(1000 + Math.random() * 9000);
-        user.otpExpiredAt = new Date(Date.now() + 5 * 60 * 1000);
-        await user.save();
-        const html = forgotPasswordOtpTemplate(user.otp, user.userName,)
+        const otp = Math.floor(1000 + Math.random() * 9000);
+        await redisConnection.set(`otp:${email}`, otp, { ex: 300 });
+        const html = forgotPasswordOtpTemplate(otp, user.userName,)
         await emailQueue.add("sendOtpMail", {
             to: email,
             subject: "OTP For Forgot Password",
