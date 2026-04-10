@@ -127,7 +127,7 @@ export const forgotPassword = async (req, res) => {
             })
         }
         const otp = Math.floor(1000 + Math.random() * 9000);
-        await redisConnection.set(`otp:${email}`, otp, { ex: 300 });
+        await redisConnection.set(`otp:${email}`, otp, "EX", 300);
         const html = forgotPasswordOtpTemplate(otp, user.userName,)
         await emailQueue.add("sendOtpMail", {
             to: email,
