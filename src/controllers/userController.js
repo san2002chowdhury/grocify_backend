@@ -166,6 +166,7 @@ export const verifyOtp = async (req, res) => {
                 })
             }
             else {
+                await redisConnection.del(`otp:${user.email}`)
                 return res.status(200).json({
                     success: true,
                     message: "Otp verified successfully!",
