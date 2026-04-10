@@ -9,6 +9,7 @@ import cartRoute from "./src/routes/cartRoute.js";
 import orderRoute from "./src/routes/orderRoute.js";
 import contactRoute from "./src/routes/contactRoute.js";
 import newsLetterRoute from "./src/routes/newsletter.js";
+import "./src/queue/emailWorker.js"
 
 const app = express();
 const PORT = process.env.PORT || 8000;

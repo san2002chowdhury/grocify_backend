@@ -5,6 +5,7 @@ import userSchema from "../models/user.js";
 import { verifyEmailTemplate } from "../htmlTemplate/verifyEmailTemplate.js";
 import { sendEmail } from "../config/sendEmail.js";
 import { forgotPasswordOtpTemplate } from "../htmlTemplate/forgotPasswordOtpTemplate.js";
+import { emailQueue } from "../queue/emailQueue.js";
 
 
 export const register = async (req, res) => {
@@ -128,11 +129,12 @@ export const forgotPassword = async (req, res) => {
         user.otpExpiredAt = new Date(Date.now() + 5 * 60 * 1000);
         await user.save();
         const html = forgotPasswordOtpTemplate(user.otp, user.userName,)
-        await sendEmail({
+        await emailQueue.add("sendOtpMail", {
             to: email,
             subject: "OTP For Forgot Password",
             html
-        });
+        })
+
         return res.status(200).json({
             success: true,
             message: "OTP send successfully!",
