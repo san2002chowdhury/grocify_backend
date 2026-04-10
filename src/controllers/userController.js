@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import fs from "fs";
 import userSchema from "../models/user.js";
 import { verifyEmailTemplate } from "../htmlTemplate/verifyEmailTemplate.js";
-import { sendEmail } from "../config/sendEmail.js";
 import { forgotPasswordOtpTemplate } from "../htmlTemplate/forgotPasswordOtpTemplate.js";
 import { emailQueue } from "../queue/emailQueue.js";
 import { redisConnection } from "../config/redis.js";
@@ -31,14 +30,13 @@ export const register = async (req, res) => {
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.secretKey, { expiresIn: "1m" })
         const verifyLink = `${process.env.FRONTEND_URL}/verify_email/${token}`;
         const html = verifyEmailTemplate(verifyLink, userName);
-
         user.token = token;
         await user.save();
-        await sendEmail({
+        await emailQueue.add("sendVerifyUserMail", {
             to: email,
             subject: "Verify Your Email",
             html
-        });
+        })
         return res.status(201).json({
             success: true,
             message: "User registered successfully!",
@@ -56,10 +54,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(email, password);
-
         const user = await userSchema.findOne({ email: email });
-        console.log(user);
 
         if (!user) {
             return res.status(401).json({
@@ -68,10 +63,7 @@ export const login = async (req, res) => {
             })
         }
         else {
-            console.log(password, user.password);
-
             const passwordCheck = await bcrypt.compare(password, user.password);
-            console.log(passwordCheck);
             if (!passwordCheck) {
                 return res.status(400).json({
                     success: false,
@@ -160,20 +152,24 @@ export const verifyOtp = async (req, res) => {
             })
         }
         else {
-            if (otp === user.otp && Date.now() < user.otpExpiredAt) {
-                user.otp = null;
-                user.otpExpiredAt = null;
-                await user.save();
+            const storedOtp = await redisConnection.get(`otp:${user.email}`);
+            if (!storedOtp) {
+                return res.status(400).json({
+                    success: false,
+                    message: "OTP Expired!"
+                })
+            }
+            else if (storedOtp !== otp) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid OTP!"
+                })
+            }
+            else {
                 return res.status(200).json({
                     success: true,
                     message: "Otp verified successfully!",
                     email: user.email
-                })
-            }
-            else {
-                return res.status(400).json({
-                    success: false,
-                    message: "OTP expired or not matched!"
                 })
             }
         }
@@ -224,7 +220,6 @@ export const logout = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "User logged out successfully!",
-            // user,
         })
 
     }

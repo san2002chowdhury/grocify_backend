@@ -9,7 +9,7 @@ async function dbConnect() {
         console.log("<========Database connected successfully!========>");
     }
     catch (e) {
-        console.log("<======Cannot conntect to the Database!======>");
+        console.log("<======Cannot connect to the Database!======>");
         console.log(e);
     }
 }

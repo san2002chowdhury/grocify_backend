@@ -3,10 +3,9 @@ import crypto from "crypto";
 import dotenv from "dotenv/config";
 import orderSchema from "../models/order.js";
 import userSchema from "../models/user.js";
-import { sendEmail } from "../config/sendEmail.js";
 import { confirmOrderTemplate } from "../htmlTemplate/confirmOrderTemplate.js";
-import user from "../models/user.js";
 import { orderDeliveredTemplate } from "../htmlTemplate/orderDeliverdTemplate.js";
+import { emailQueue } from "../queue/emailQueue.js";
 const razorpay = new Razorpay({
     key_id: process.env.RazpayKeyId,
     key_secret: process.env.RazpayKeySecret
@@ -42,7 +41,7 @@ export const cashOnDeliveryOrder = async (req, res) => {
             paymentStatus: "paid"
         })
         const html = confirmOrderTemplate(isPresent.userName, order)
-        await sendEmail({
+        await emailQueue.add("sendOrderConfirmMail", {
             to: isPresent.email,
             subject: `Order Confirmed-${order.paymentType}`,
             html
@@ -64,8 +63,6 @@ export const cashOnDeliveryOrder = async (req, res) => {
 export const createOrder = async (req, res) => {
     try {
         const id = req.userId;
-        console.log(id);
-
         const isPresent = await userSchema.findById(id);
         if (!isPresent) {
             return res.status(404).json({
@@ -74,8 +71,6 @@ export const createOrder = async (req, res) => {
             })
         }
         const { items, shippingAddress, totalAmount, totalItems } = req.body;
-        console.log(items, shippingAddress, totalAmount, totalItems);
-
         const options = {
             amount: totalAmount * 100,
             currency: "INR",
@@ -100,9 +95,6 @@ export const createOrder = async (req, res) => {
             paymentType: "OP",
             razorpayOrderId: razorpayOrder.id,
         })
-        console.log(order);
-
-
         return res.status(201).json({
             success: true,
             key: process.env.RazpayKeyId,
@@ -137,7 +129,7 @@ export const verifyPayment = async (req, res) => {
             )
             const user = await userSchema.findById(order.user).select("userName email");
             const html = confirmOrderTemplate(user.userName, order)
-            await sendEmail({
+            await emailQueue.add("sendOrderConfirmMail", {
                 to: user.email,
                 subject: `Order Confirmed-${order.paymentType}`,
                 html
@@ -236,10 +228,7 @@ export const allOrders = async (req, res) => {
 
 export const manageOrders = async (req, res) => {
     try {
-        console.log();
-
         const { _id, status } = req.body;
-
         const allowedStatus = ["Processing", "Shipped", "Delivered", "Cancelled"];
 
         if (!allowedStatus.includes(status)) {
@@ -257,12 +246,11 @@ export const manageOrders = async (req, res) => {
         if (status === "Delivered") {
             const user = await userSchema.findById(order.user).select("userName email")
             const html = orderDeliveredTemplate(user.userName, order);
-
-            await sendEmail({
+            await emailQueue.add("orderDeliveredMail", {
                 to: user.email,
                 subject: "Your Order Has Been Delivered!",
                 html,
-            });
+            })
         }
         if (!order) {
             return res.status(404).json({

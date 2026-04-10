@@ -1,5 +1,6 @@
 import { contactTemplate } from "../htmlTemplate/contactTemplate.js";
 import contactSchema from "../models/contact.js";
+import { emailQueue } from "../queue/emailQueue.js";
 
 export const saveContactMessage = async (req, res) => {
     try {
@@ -18,7 +19,7 @@ export const saveContactMessage = async (req, res) => {
         })
         await savedResponse.save()
         const html = contactTemplate(name, email, message);
-        await sendEmail({
+        await emailQueue.add("connectionMail", {
             to: email,
             subject: `Thanks For Contacting Us!`,
             html

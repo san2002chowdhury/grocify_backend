@@ -1,6 +1,6 @@
-import { sendEmail } from "../config/sendEmail.js";
 import { newsletterThanksTemplate } from "../htmlTemplate/newsletterThanksTemplate.js";
 import newletterSchema from "../models/newsletter.js"
+import { emailQueue } from "../queue/emailQueue.js";
 
 export const subscribeNewsletter = async (req, res) => {
     try {
@@ -17,11 +17,12 @@ export const subscribeNewsletter = async (req, res) => {
         });
         await result.save()
         const html = newsletterThanksTemplate(email);
-        await sendEmail({
+        await emailQueue.add("newsletterSubscriptionMail", {
             to: email,
             subject: `Thanks For Your Subscription!`,
             html
         })
+
         return res.status(201).json({
             success: true,
             message: "Thank you! for subscribing us!"
