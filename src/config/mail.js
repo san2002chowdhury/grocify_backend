@@ -4,29 +4,27 @@ import nodemailer from "nodemailer";
 
 export const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
+    port: 587,
     secure: false,
     auth: {
         user: process.env.mailUser,
-        pass: process.env.mailPass
-    },
-    connectionTimeout: 10000
+        pass: process.env.mailPass,
+    }
 });
 
-transport.verify((err, success) => {
+transport.verify((err) => {
     if (err) {
         console.log("VERIFY ERROR:", err);
     } else {
         console.log("SMTP READY");
     }
 });
+
 export function mailConfiguratin({ to, subject, html }) {
-    console.log(to, subject);
     return {
         from: process.env.mailUser,
         to,
         subject,
         html
-    }
+    };
 }
-
