@@ -22,6 +22,7 @@ transport.verify((err, success) => {
     }
 });
 export function mailConfiguratin({ to, subject, html }) {
+    console.log(to, subject);
     return {
         from: process.env.mailUser,
         to,
