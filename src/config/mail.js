@@ -10,8 +10,7 @@ export const transport = nodemailer.createTransport({
         user: process.env.mailUser,
         pass: process.env.mailPass
     },
-    logger: true,
-    debug: true
+    connectionTimeout: 10000
 });
 
 transport.verify((err, success) => {
