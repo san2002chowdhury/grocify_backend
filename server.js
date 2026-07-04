@@ -1,6 +1,7 @@
+import dns from "dns";
+dns.setDefaultResultOrder("ipv4first");
 import express from "express";
 import cors from "cors";
-import dns from "dns";
 import dotenv from "dotenv/config";
 import dbConnect from "./src/config/dbConnect.js";
 import userRoute from "./src/routes/userRoute.js";
@@ -12,7 +13,6 @@ import contactRoute from "./src/routes/contactRoute.js";
 import newsLetterRoute from "./src/routes/newsletter.js";
 import "./src/queue/emailWorker.js"
 
-dns.setDefaultResultOrder("ipv4first");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
